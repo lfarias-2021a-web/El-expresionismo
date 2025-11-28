@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Un Viaje Por El Expresionismo</title>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Estilos -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: 'Crimson Text', 'Times New Roman', serif;
+      background: #000000;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+    html { scroll-behavior: smooth; }
+
+    /* Fondo Animado */
+    .animated-bg {
+      position: fixed; inset: 0; z-index: -1; background: #000; overflow: hidden;
+    }
+    .bg-layer { position: absolute; inset: 0; opacity: 0.3; }
+    .bg-shape {
+      position: absolute;
+      background: radial-gradient(circle, rgba(139, 0, 0, 0.4) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+    }
+    .bg-shape:nth-child(1) { width: 300px; height: 300px; top: 10%; left: 20%; animation-delay: 0s; }
+    .bg-shape:nth-child(2) { width: 400px; height: 400px; top: 60%; right: 10%; animation-delay: -5s; }
+    .bg-shape:nth-child(3) { width: 250px; height: 250px; bottom: 20%; left: 50%; animation-delay: -10s; }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('imagenes/Nosferatu.jpg') center/cover no-repeat;
+      padding: 100px 20px; text-align: center; border-bottom: 5px solid #660000;
+      position: relative; overflow: hidden; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    header::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 0, 0, 0.1) 10px, rgba(139, 0, 0, 0.1) 20px);
+      animation: slidePattern 20s linear infinite;
+    }
+    @keyframes slidePattern { 0% { transform: translateX(0); } 100% { transform: translateX(28px); } }
+
+    h1 {
+      font-size: 7.5em;
+      margin: 0 0 30px; color: #cc0000;
+      text-shadow: 4px 4px 12px rgba(204, 0, 0, 0.9), 0 0 30px rgba(204, 0, 0, 0.5);
+      position: relative; z-index: 1; animation: titlePulse 3s ease-in-out infinite;
+      font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 900;
+      letter-spacing: 3px; text-transform: uppercase;
+    }
+    @keyframes titlePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+    .subtitle {
+      font-size: 1.9em; color: #b0b0b0; max-width: 900px; margin: 0 auto 40px;
+      line-height: 1.8; padding: 20px; font-style: italic; z-index: 1; position: relative;
+    }
+    .scroll-indicator {
+      font-size: 8em; color: #cc0000; animation: bounce 2s infinite;
+      margin-top: 40px; z-index: 1;
+    }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(20px); } }
+
+    /* Navegación */
+    nav {
+      background: #000; padding: 20px; display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 15px; border-bottom: 3px solid #660000;
+      position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+    }
+    .nav-btn {
+      background: #660000; color: #e0e0e0; border: 2px solid #990000;
+      padding: 12px 28px; font-size: 1em; cursor: pointer; border-radius: 0;
+      transition: all 0.3s ease; font-family: 'Cinzel', serif; font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8); text-transform: uppercase; letter-spacing: 1px;
+    }
+    .nav-btn:hover { background: #b30000; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(139, 0, 0, 0.5); }
+    .nav-btn.active { background: #ff4444; box-shadow: 0 0 20px rgba(255, 68, 68, 0.6); }
+
+    /* Contenido */
+    main { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+    .section { display: none; animation: fadeIn 0.5s ease-in; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .section-title {
+      font-size: 2.8em; color: #cc0000; margin-bottom: 30px;
+      border-bottom: 4px solid #660000; padding-bottom: 15px;
+      font-family: 'Cinzel', serif; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; text-shadow: 2px 2px 8px rgba(204, 0, 0, 0.6);
+    }
+
+    .content-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px; margin-bottom: 40px;
+    }
+
+    .card {
+      background: #0a0a0a; border: 2px solid #660000; padding: 25px;
+      transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+    }
+    .card:hover { transform: translateY(-5px); border-color: #8b0000; box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4); }
+    .card h3 { color: #cc0000; font-size: 1.6em; margin-bottom: 15px; font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 1px; }
+    .card p { line-height: 1.7; color: #cccccc; margin-bottom: 20px; }
+
+    .btn {
+      background: #333; color: #f5f5f5; border: 2px solid #555;
+      padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px;
+      font-size: 0.95em; transition: all 0.3s ease; font-family: 'Georgia', serif;
+    }
+    .btn:hover { background: #8b0000; border-color: #8b0000; transform: scale(1.05); }
+
+    /* Scrollytelling */
+    .scrolly-section {
+      min-height: 100vh; padding: 80px 20px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    .section-content { max-width: 1000px; width: 100%; }
+
+    .text-block {
+      background: rgba(10, 10, 10, 0.8); border: 3px solid #660000;
+      padding: 40px; margin-bottom: 40px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+    }
+    .text-block h3 { font-size: 2em; color: #cc0000; font-family: 'Cinzel', serif; margin-bottom: 20px; letter-spacing: 2px; }
+    .text-block p { font-size: 1.2em; line-height: 2; color: #d0d0d0; margin-bottom: 15px; }
+
+    .image-gallery {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px; margin: 40px 0;
+    }
+    .gallery-item {
+      position: relative; overflow: hidden; border: 3px solid #660000;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9); transition: all 0.4s ease;
+      background: #0a0a0a; padding: 20px; cursor: pointer;
+    }
+    .gallery-item:hover { transform: scale(1.05); border-color: #cc0000; box-shadow: 0 12px 40px rgba(204, 0, 0, 0.5); }
+    .gallery-img { width: 100%; height: 250px; object-fit: cover; margin-bottom: 15px; border-radius: 8px; }
+    .gallery-caption { font-size: 1.1em; color: #b0b0b0; text-align: center; font-style: italic; }
+
+    /* Galería de imágenes */
+    .real-image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(10, 10, 10, 0.8);
+      border: 2px solid #660000;
+      border-radius: 10px;
+    }
+    .real-image-item {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #cc0000;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(204, 0, 0, 0.6);
+      transition: transform 0.3s ease;
+    }
+    .real-image-item:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
+    .real-image-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .real-image-caption {
+      padding: 10px;
+      background: #1a0000;
+      color: #cc0000;
+      text-align: center;
+      font-size: 0.9em;
+      font-style: italic;
+    }
+
+    .play-icon {
+      font-size: 1.4em;
+      transition: all 0.3s ease;
+    }
+    .playing .play-icon {
+      transform: scale(0);
+      opacity: 0;
+    }
+    .playing::after {
+      content: 'Pause';
+      font-size: 1.4em;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .timeline { position: relative; padding: 40px 0; }
+    .timeline::before {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 4px; background: linear-gradient(to bottom, #660000, #cc0000, #660000);
+    }
+    .timeline-item { position: relative; margin-bottom: 50px; width: 45%; }
+    .timeline-item:nth-child(odd) { margin-left: 0; margin-right: auto; padding-right: 40px; text-align: right; }
+    .timeline-item:nth-child(even) { margin-left: auto; margin-right: 0; padding-left: 40px; text-align: left; }
+    .timeline-dot {
+      position: absolute; top: 0; width: 20px; height: 20px;
+      background: #cc0000; border: 4px solid #000; border-radius: 50%;
+      box-shadow: 0 0 20px rgba(204, 0, 0, 0.8);
+    }
+    .timeline-item:nth-child(odd) .timeline-dot { right: -10px; }
+    .timeline-item:nth-child(even) .timeline-dot { left: -10px; }
+    .timeline-content { background: rgba(10, 10, 10, 0.9); border: 2px solid #660000; padding: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8); }
+    .timeline-year { font-size: 1.8em; color: #cc0000; font-family: 'Cinzel', serif; font-weight: bold; margin-bottom: 10px; }
+    .timeline-text { font-size: 1.1em; line-height: 1.8; color: #d0d0d0; }
+
+    .quote-block {
+      background: rgba(26, 0, 0, 0.6); border-left: 5px solid #cc0000;
+      padding: 40px; margin: 60px 0; font-size: 1.5em; font-style: italic;
+      color: #d0d0d0; text-align: center; box-shadow: 0 4px 20px rgba(204, 0, 0, 0.3);
+    }
+    .quote-author { font-size: 0.8em; color: #cc0000; margin-top: 20px; font-family: 'Cinzel', serif; font-style: normal; }
+
+    .game-container { background: #0a0a0a; border: 3px solid #660000; padding: 30px; margin-bottom: 30px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9); }
+    .game-title { font-size: 2em; color: #cc0000; margin-bottom: 20px; font-family: 'Cinzel', serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+    .puzzle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 400px; margin: 20px auto; }
+    .puzzle-piece {
+      aspect-ratio: 1; background: #1a1a1a; border: 2px solid #660000;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
+      color: #cc0000; font-family: 'Cinzel', serif;
+    }
+    .puzzle-piece:hover { background: #444; transform: scale(1.05); }
+    .puzzle-piece.empty { background: #0a0a0a; border: 2px dashed #555; }
+
+    .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; max-width: 600px; margin: 20px auto; }
+    .memory-card {
+      aspect-ratio: 1; background: #1a1a1a; border: 3px solid #660000;
+      cursor: pointer; transition: all 0.3s ease; position: relative;
+      display: flex; align-items: center; justify-content: center; font-size: 3em;
+    }
+    .memory-card:hover { transform: scale(1.05); border-color: #cc0000; }
+    .memory-card.flipped { background: #2a0000; border-color: #cc0000; }
+    .memory-card.matched { background: #006400; border-color: #00ff00; cursor: default; }
+    .card-front, .card-back { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .card-back { background: #1a1a1a; }
+
+    .game-stats { text-align: center; margin-top: 30px; font-size: 1.3em; color: #b0b0b0; }
+    .game-btn {
+      background: #660000; color: #e0e0e0; border: 2px solid #990000;
+      padding: 15px 40px; margin: 20px 10px; cursor: pointer;
+      font-family: 'Cinzel', serif; font-size: 1.1em; font-weight: bold;
+      text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    }
+    .game-btn:hover { background: #990000; transform: translateY(-2px); }
+
+    .quiz-question { font-size: 1.3em; margin-bottom: 25px; color: #f5f5f5; }
+    .quiz-options { display: flex; flex-direction: column; gap: 12px; }
+    .quiz-option {
+      background: #1a1a1a; border: 2px solid #660000; padding: 15px;
+      border-radius: 0; cursor: pointer; transition: all 0.3s ease; color: #e0e0e0;
+    }
+    .quiz-option:hover { background: #444; border-color: #8b0000; }
+    .quiz-option.correct { background: #006400; border-color: #00ff00; }
+    .quiz-option.incorrect { background: #640000; border-color: #ff0000; }
+    .quiz-feedback { margin-top: 20px; padding: 15px; border-radius: 5px; font-weight: bold; text-align: center; }
+    .quiz-feedback.correct { background: #006400; color: #00ff00; }
+    .quiz-feedback.incorrect { background: #640000; color: #ff0000; }
+    .game-controls { margin-top: 20px; text-align: center; }
+
+    footer {
+      background: #000; padding: 30px 20px; text-align: center;
+      border-top: 3px solid #660000; margin-top: 60px;
+    }
+    footer p { color: #888; margin: 5px 0; }
+
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: rgba(26, 0, 0, 0.95); color: #e0e0e0; padding: 15px 30px;
+      border: 2px solid #cc0000; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      z-index: 1000; font-family: 'Cinzel', serif;
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateX(-50%) translateY(100px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 3.5em; }
+      .section-title { font-size: 1.8em; }
+      nav { padding: 15px 10px; }
+      .nav-btn { padding: 10px 18px; font-size: 0.9em; }
+      .content-grid { grid-template-columns: 1fr; }
+      .timeline::before { left: 20px; }
+      .timeline-item { width: 100%; padding-left: 50px !important; padding-right: 0 !important; text-align: left !important; }
+      .timeline-item .timeline-dot { left: 10px !important; right: auto !important; }
+      .memory-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @view-transition { navigation: auto; }
+  </style>
+
+  <!-- Carga del JavaScript externo -->
+  <script src="contenido.js" defer></script>
+</head>
+
+<body>
+  <!-- Fondo Animado -->
+  <div class="animated-bg">
+    <div class="bg-layer">
+      <div class="bg-shape"></div>
+      <div class="bg-shape"></div>
+      <div class="bg-shape"></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1 id="mainTitle">Un Viaje Por El Expresionismo</h1>
+    <p class="subtitle" id="subtitle">Adentrándote en las sombras del alma humana, donde el arte se convierte en un grito visceral contra la realidad. Descubre el movimiento que cambió para siempre la forma de ver, sentir y crear.</p>
+    <div class="scroll-indicator">↓</div>
+  </header>
+
+  <!-- Navegación -->
+  <nav id="navigation">
+    <button class="nav-btn active" onclick="showSection('music')">🎵 Música</button>
+    <button class="nav-btn" onclick="showSection('dance')">💃 Danza</button>
+    <button class="nav-btn" onclick="showSection('cinema')">🎬 Cine</button>
+    <button class="nav-btn" onclick="showSection('theater')">🎭 Teatro</button>
+    <button class="nav-btn" onclick="showSection('painting')">🎨 Pintura</button>
+    <button class="nav-btn" onclick="showSection('games')">🎮 Juegos</button>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main>
+    <!-- Música -->
+    <section id="music" class="section active">
+      <h2 class="section-title" id="musicTitle">Música Expresionista</h2>
+      <div class="content-grid">
+        <div class="card">
+          <h3>Arnold Schönberg</h3>
+          <p>Pionero de la atonalidad y la técnica dodecafónica. Su obra rompió con las reglas tradicionales de la armonía, creando paisajes sonoros intensos y emotivos que reflejaban la angustia del expresionismo.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=arnold+schoenberg+expressionism')">Ver Videos</button>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=schoenberg+music')">Escuchar Música</button>
+        </div>
+        <div class="card">
+          <h3>Alban Berg</h3>
+          <p>Compositor que fusionó el expresionismo con elementos románticos. Su ópera "Wozzeck" es una obra maestra del expresionismo musical, explorando temas de alienación y desesperación.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=alban+berg+wozzeck')">Ver Documentales</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Alban_Berg')">Leer Artículo</button>
+        </div>
+        <div class="card">
+          <h3>Anton Webern</h3>
+          <p>Maestro de la brevedad y la concentración musical. Sus composiciones expresionistas utilizan silencios y sonidos aislados para crear una atmósfera de introspección profunda.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=anton+webern')">Escuchar Obras</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Anton_Webern')">Más Información</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Danza -->
+    <section id="dance" class="section">
+      <h2 class="section-title" id="danceTitle">Danza Expresionista</h2>
+      <div class="content-grid">
+        <div class="card">
+          <h3>Mary Wigman</h3>
+          <p>Considerada la madre de la danza expresionista alemana. Desarrolló un estilo que enfatizaba la emoción cruda y el movimiento angular, alejándose de la gracia tradicional del ballet.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=mary+wigman+dance')">Ver Performances</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Mary_Wigman')">Leer Biografía</button>
+        </div>
+        <div class="card">
+          <h3>Rudolf Laban</h3>
+          <p>Teórico y coreógrafo que revolucionó el análisis del movimiento. Creó sistemas de notación de danza y exploró la relación entre el movimiento corporal y la emoción interior.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=rudolf+laban')">Ver Documentales</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Rudolf_von_Laban')">Más Información</button>
+        </div>
+        <div class="card">
+          <h3>Kurt Jooss</h3>
+          <p>Creador de "La Mesa Verde", una obra maestra que combina expresionismo con crítica social. Su trabajo fusionó técnicas de ballet clásico con la intensidad emocional del expresionismo.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=kurt+jooss+green+table')">Ver La Mesa Verde</button>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=kurt+jooss+documentary')">Documentales</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cine -->
+    <section id="cinema" class="section">
+      <h2 class="section-title" id="cinemaTitle">Cine Expresionista</h2>
+      <div class="content-grid">
+        <div class="card">
+          <h3>El Gabinete del Dr. Caligari (1920)</h3>
+          <p>Obra cumbre del cine expresionista. Con sus escenarios distorsionados y sombras dramáticas, creó una atmósfera de pesadilla que reflejaba el trauma de la posguerra alemana.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=cabinet+dr+caligari+1920')">Ver Película</button>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=caligari+analysis')">Análisis</button>
+        </div>
+        <div class="card">
+          <h3>Nosferatu (1922)</h3>
+          <p>La adaptación no autorizada de Drácula por F.W. Murnau. Utilizó locaciones reales y efectos de luz expresionistas para crear una de las películas de terror más influyentes de la historia.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=nosferatu+1922')">Ver Película</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Nosferatu')">Leer Artículo</button>
+        </div>
+        <div class="card">
+          <h3>Metrópolis (1927)</h3>
+          <p>Épica de ciencia ficción de Fritz Lang que combina expresionismo con comentario social. Su visión distópica del futuro influyó en generaciones de cineastas.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=metropolis+1927')">Ver Película</button>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=metropolis+documentary')">Documentales</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Teatro -->
+    <section id="theater" class="section">
+      <h2 class="section-title" id="theaterTitle">Teatro Expresionista</h2>
+      <div class="content-grid">
+        <div class="card">
+          <h3>Georg Kaiser</h3>
+          <p>Dramaturgo prolífico del expresionismo alemán. Sus obras como "De la mañana a la medianoche" presentaban personajes arquetípicos y diálogos estilizados que reflejaban la alienación moderna.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=georg+kaiser+expressionism')">Ver Obras</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Georg_Kaiser')">Leer Biografía</button>
+        </div>
+        <div class="card">
+          <h3>Ernst Toller</h3>
+          <p>Activista y dramaturgo cuyas obras expresionistas exploraban temas de revolución y transformación social. Su teatro era intensamente político y emocionalmente cargado.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=ernst+toller')">Ver Documentales</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Ernst_Toller')">Más Información</button>
+        </div>
+        <div class="card">
+          <h3>Características del Teatro Expresionista</h3>
+          <p>Escenografías abstractas, iluminación dramática, actuación exagerada y temas de alienación. El teatro expresionista rechazaba el realismo en favor de la expresión emocional directa.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=expressionist+theater')">Ver Ejemplos</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Teatro_expresionista')">Leer Artículo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pintura -->
+    <section id="painting" class="section">
+      <h2 class="section-title" id="paintingTitle">Pintura Expresionista</h2>
+      <div class="content-grid">
+        <div class="card">
+          <h3>Die Brücke (El Puente)</h3>
+          <p>Grupo fundado en 1905 por Ernst Ludwig Kirchner y otros. Utilizaban colores intensos y pinceladas vigorosas para expresar emociones crudas y rechazar el academicismo.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=die+brucke+expressionism')">Ver Obras</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Die_Br%C3%BCcke')">Leer Artículo</button>
+        </div>
+        <div class="card">
+          <h3>Der Blaue Reiter (El Jinete Azul)</h3>
+          <p>Movimiento liderado por Wassily Kandinsky y Franz Marc. Exploraban la espiritualidad y la abstracción, utilizando el color para evocar estados emocionales profundos.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=der+blaue+reiter')">Ver Colección</button>
+          <button class="btn" onclick="openLink('https://es.wikipedia.org/wiki/Der_Blaue_Reiter')">Más Información</button>
+        </div>
+        <div class="card">
+          <h3>Edvard Munch</h3>
+          <p>Aunque noruego, Munch fue fundamental para el expresionismo alemán. "El Grito" es el icono definitivo de la angustia existencial expresionista.</p>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=edvard+munch+expressionism')">Ver Documentales</button>
+          <button class="btn" onclick="openLink('https://www.youtube.com/results?search_query=edvard+munch+paintings')">Ver Obras</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Juegos -->
+    <section id="games" class="section">
+      <h2 class="section-title" id="gamesTitle">Juegos Interactivos</h2>
+
+      <!-- Puzzle -->
+      <div class="game-container">
+        <h3 class="game-title">Rompecabezas: Ordena los Movimientos</h3>
+        <p style="color: #cccccc; margin-bottom: 20px;">Ordena los números del 1 al 8 deslizando las piezas. ¡Cada número representa un movimiento artístico del expresionismo!</p>
+        <div class="puzzle-grid" id="puzzleGrid"></div>
+        <div class="game-controls">
+          <button class="btn" onclick="resetPuzzle()">Reiniciar Puzzle</button>
+        </div>
+        <div id="puzzleWin" style="display: none; text-align: center; margin-top: 20px; padding: 20px; background: #006400; border-radius: 5px; color: #00ff00; font-weight: bold;">
+          ¡Felicidades! ¡Has completado el rompecabezas!
+        </div>
+      </div>
+
+      <!-- Quiz -->
+      <div class="game-container">
+        <h3 class="game-title">Acertijos del Expresionismo</h3>
+        <div id="quizContainer"></div>
+        <div class="game-controls">
+          <button class="btn" onclick="nextQuestion()" id="nextBtn" style="display: none;">Siguiente Pregunta</button>
+          <button class="btn" onclick="restartQuiz()" id="restartBtn" style="display: none;">Reiniciar Quiz</button>
+        </div>
+      </div>
+
+      <!-- Memoria -->
+      <div class="game-container">
+        <h3 class="game-title">Memoria del Alma Oscura</h3>
+        <p style="color: #cccccc; margin-bottom: 20px; text-align: center;">Encuentra las parejas de símbolos expresionistas. ¡Cada coincidencia revela una parte del movimiento!</p>
+        <div class="memory-grid" id="memoryGrid"></div>
+        <div class="game-stats">
+          <div>Movimientos: <span id="moves">0</span></div>
+          <div>Parejas encontradas: <span id="matches">0</span> / 8</div>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn" onclick="resetMemoryGame()">Nuevo Juego</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scrollytelling -->
+  <section class="scrolly-section">
+    <div class="section-content">
+      <h2 class="section-title">El Nacimiento de una Revolución</h2>
+      <div class="text-block">
+        <h3>Los Orígenes del Expresionismo</h3>
+        <p>A principios del siglo XX, Europa vivía una época de profundas transformaciones. La industrialización acelerada, el crecimiento urbano caótico y las tensiones políticas crearon un clima de ansiedad y alienación. En medio de este torbellino, nació el Expresionismo Alemán: un movimiento artístico que rechazaba la representación objetiva de la realidad para explorar las emociones más intensas y oscuras del ser humano.</p>
+        <p>Los expresionistas no buscaban retratar lo que veían, sino lo que sentían. Colores vibrantes, formas distorsionadas, líneas angulares y composiciones dramáticas se convirtieron en el lenguaje de una generación que gritaba su descontento ante un mundo deshumanizado.</p>
+      </div>
+      <div class="quote-block">
+        "El arte no reproduce lo visible, sino que hace visible lo invisible."
+        <div class="quote-author">— Paul Klee</div>
+      </div>
+      <div class="text-block">
+        <h3>Características del Movimiento</h3>
+        <p>El Expresionismo se caracterizó por su rechazo absoluto al naturalismo y al impresionismo. Los artistas expresionistas empleaban colores intensos y antinaturales, formas distorsionadas que reflejaban estados emocionales extremos, y composiciones que priorizaban la expresión subjetiva sobre la representación objetiva.</p>
+        <p>La angustia existencial, el miedo, la soledad, la locura y la muerte fueron temas recurrentes. El expresionismo no era solo un estilo artístico, era una filosofía de vida, una forma de entender y cuestionar la existencia humana en un mundo cada vez más mecánico e impersonal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pintura Visual -->
+  <section class="scrolly-section">
+    <div class="section-content">
+      <h2 class="section-title">Pintura: El Color de las Emociones</h2>
+
+      <!-- GALERÍA PRINCIPAL CON 3 IMÁGENES REALES -->
+      <div class="image-gallery">
+        <!-- Angustia Existencial -->
+        <div class="gallery-item" onclick="loadRealImages('angustia existencial', this)">
+          <img src="imagenes/angustia existencial/1.jpg" alt="Angustia" class="gallery-img" onerror="this.src='imagenes/placeholder.jpg'">
+          <p class="gallery-caption">Expresión de la angustia existencial</p>
+        </div>
+
+        <!-- Formas Angulares -->
+        <div class="gallery-item" onclick="loadRealImages('formas angulares', this)">
+          <img src="imagenes/formas angulares/1.jpg" alt="Formas" class="gallery-img" onerror="this.src='imagenes/placeholder.jpg'">
+          <p class="gallery-caption">Formas angulares y dramáticas</p>
+        </div>
+
+        <!-- Sombras del Alma -->
+        <div class="gallery-item" onclick="loadRealImages('sombras del alma', this)">
+          <img src="imagenes/sombras del alma/1.jpg" alt="Sombras" class="gallery-img" onerror="this.src='imagenes/placeholder.jpg'">
+          <p class="gallery-caption">Oscuridad y profundidad psicológica</p>
+        </div>
+      </div>
+
+      <!-- CONTENEDOR PARA TODAS LAS IMÁGENES AL HACER CLIC -->
+      <div id="realImageContainer" style="margin-top: 40px;"></div>
+
+      <div class="text-block">
+        <h3>Die Brücke y Der Blaue Reiter</h3>
+        <p>Dos grupos fundamentales definieron la pintura expresionista alemana. Die Brücke (El Puente), fundado en Dresde en 1905, buscaba crear un puente entre el arte tradicional y el moderno. Ernst Ludwig Kirchner, Erich Heckel y Karl Schmidt-Rottluff empleaban colores violentos y pinceladas agresivas para capturar la intensidad emocional de la vida moderna.</p>
+        <p>Der Blaue Reiter (El Jinete Azul), liderado por Wassily Kandinsky y Franz Marc en Múnich, exploraba la espiritualidad y la abstracción. Para ellos, el color no era meramente decorativo, sino un medio directo para expresar estados del alma. Sus obras buscaban trascender lo material y alcanzar lo espiritual.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cine Timeline -->
+  <section class="scrolly-section">
+    <div class="section-content">
+      <h2 class="section-title">Cine: Pantallas de Pesadilla</h2>
+      <div class="text-block">
+        <h3>La Pantalla Como Lienzo</h3>
+        <p>El cine expresionista alemán transformó el séptimo arte en una experiencia visual perturbadora y fascinante. Entre 1919 y 1933, directores visionarios crearon películas que desafiaban las convenciones narrativas y visuales, empleando escenografías distorsionadas, sombras exageradas, maquillaje dramático y actuaciones intensas.</p>
+        <p>Las películas expresionistas no solo contaban historias, sino que materializaban estados mentales. Los decorados pintados con perspectivas imposibles, las calles torcidas, las ventanas trapezoidales y las sombras amenazantes convertían el espacio físico en una manifestación visual de la psique atormentada de los personajes.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">1920</div>
+            <div class="timeline-text"><strong>El Gabinete del Dr. Caligari</strong> - Robert Wiene crea la obra maestra del cine expresionista. Sus decorados pintados con perspectivas distorsionadas y su narrativa en bucle redefinieron el lenguaje cinematográfico.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">1922</div>
+            <div class="timeline-text"><strong>Nosferatu</strong> - F.W. Murnau combina locaciones reales con técnicas expresionistas para crear una atmósfera de terror gótico. El Conde Orlok se convierte en un icono del horror cinematográfico.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">1927</div>
+            <div class="timeline-text"><strong>Metrópolis</strong> - Fritz Lang construye una épica distópica con sets monumentales. La ciudad vertical, dividida entre opresores y oprimidos, sigue siendo una de las imágenes más poderosas del cine.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">1931</div>
+            <div class="timeline-text"><strong>M, el Vampiro de Düsseldorf</strong> - Fritz Lang explora la mente criminal con innovaciones técnicas como el uso del sonido para crear tensión psicológica. Peter Lorre brinda una actuación inolvidable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Música -->
+  <section class="scrolly-section">
+    <div class="section-content">
+      <h2 class="section-title">Música: Sinfonías del Caos</h2>
+
+      <div class="text-block">
+        <h3>La Revolución Atonal</h3>
+        <p>Si la pintura expresionista distorsionaba las formas visuales, la música expresionista destruía las estructuras armónicas tradicionales. Arnold Schönberg lideró esta revolución al desarrollar la atonalidad y posteriormente la técnica dodecafónica, donde las doce notas de la escala cromática tenían igual importancia, eliminando la jerarquía tonal tradicional.</p>
+        <p>La música expresionista era disonante, fragmentada, angustiosa. No buscaba complacer al oído, sino expresar emociones extremas: terror, desolación, éxtasis místico. Las composiciones de Schönberg, Alban Berg y Anton Webern sonaban como el equivalente musical de las pinturas de Kirchner o las películas de Wiene.</p>
+      </div>
+
+      <div class="image-gallery">
+        <div class="gallery-item">
+          <svg class="gallery-svg" viewBox="0 0 300 250">
+            <rect width="300" height="250" fill="#000000" />
+            <g transform="translate(50, 125)">
+              <line x1="0" y1="0" x2="200" y2="0" stroke="#660000" stroke-width="2" />
+              <line x1="0" y1="-20" x2="200" y2="-20" stroke="#660000" stroke-width="2" />
+              <line x1="0" y1="20" x2="200" y2="20" stroke="#660000" stroke-width="2" />
+              <line x1="0" y1="-40" x2="200" y2="-40" stroke="#660000" stroke-width="2" />
+              <line x1="0" y1="40" x2="200" y2="40" stroke="#660000" stroke-width="2" />
+              <ellipse cx="30" cy="-30" rx="12" ry="18" fill="#cc0000" transform="rotate(-30 30 -30)" />
+              <ellipse cx="80" cy="10" rx="12" ry="18" fill="#8b0000" transform="rotate(45 80 10)" />
+              <ellipse cx="130" cy="-15" rx="12" ry="18" fill="#cc0000" transform="rotate(-60 130 -15)" />
+              <ellipse cx="170" cy="25" rx="12" ry="18" fill="#8b0000" transform="rotate(20 170 25)" />
+            </g>
+            <text x="150" y="230" font-family="Cinzel" font-size="14" fill="#cc0000" text-anchor="middle">Disonancias</text>
+          </svg>
+          <p class="gallery-caption">Arnold Schönberg - Atonalidad</p>
+        </div>
+        <div class="gallery-item">
+          <svg class="gallery-svg" viewBox="0 0 300 250">
+            <rect width="300" height="250" fill="#0a0000" />
+            <path d="M50,200 Q100,80 150,120 T250,50" stroke="#cc0000" stroke-width="5" fill="none" />
+            <path d="M50,200 Q90,150 130,180 T210,140" stroke="#8b0000" stroke-width="4" fill="none" opacity="0.7" />
+            <path d="M70,190 Q110,100 170,150 T260,90" stroke="#ff4444" stroke-width="3" fill="none" opacity="0.5" />
+            <text x="150" y="230" font-family="Cinzel" font-size="14" fill="#cc0000" text-anchor="middle">Melodía Fragmentada</text>
+          </svg>
+          <p class="gallery-caption">Alban Berg - Wozzeck</p>
+        </div>
+        <div class="gallery-item">
+          <svg class="gallery-svg" viewBox="0 0 300 250">
+            <rect width="300" height="250" fill="#000000" />
+            <circle cx="60" cy="100" r="8" fill="#cc0000" />
+            <circle cx="140" cy="60" r="6" fill="#8b0000" />
+            <circle cx="190" cy="140" r="10" fill="#cc0000" />
+            <circle cx="240" cy="90" r="7" fill="#660000" />
+            <circle cx="100" cy="160" r="9" fill="#8b0000" />
+            <line x1="60" y1="100" x2="140" y2="60" stroke="#660000" stroke-width="1" stroke-dasharray="5,5" />
+            <line x1="140" y1="60" x2="190" y2="140" stroke="#660000" stroke-width="1" stroke-dasharray="5,5" />
+            <text x="150" y="230" font-family="Cinzel" font-size="14" fill="#cc0000" text-anchor="middle">Silencio y Sonido</text>
+          </svg>
+          <p class="gallery-caption">Anton Webern - Minimalismo</p>
+        </div>
+      </div>
+      <div class="quote-block">
+        "La música no debe decorar, debe ser verdadera."
+        <div class="quote-author">— Arnold Schönberg</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Legado -->
+  <section class="scrolly-section">
+    <div class="section-content">
+      <h2 class="section-title">El Legado Eterno</h2>
+      <div class="text-block">
+        <h3>Influencia en el Arte Contemporáneo</h3>
+        <p>El Expresionismo Alemán no fue solo un movimiento artístico, fue una revolución en la forma de entender y crear arte. Su influencia se extiende mucho más allá de las primeras décadas del siglo XX, permeando el cine noir estadounidense, el teatro del absurdo, el arte abstracto, el rock gótico, y prácticamente todas las formas de arte que buscan expresar emociones intensas y estados psicológicos complejos.</p>
+        <p>Directores como Tim Burton, David Lynch y Guillermo del Toro han bebido de las fuentes del expresionismo alemán. La estética gótica, el horror psicológico, la ciencia ficción distópica, todos llevan las huellas indelebles de aquellos artistas que se atrevieron a mirar dentro de la oscuridad del alma humana y plasmarla sin filtros.</p>
+      </div>
+      <div class="text-block">
+        <h3>Un Grito que Aún Resuena</h3>
+        <p>En un mundo cada vez más dominado por la tecnología, la alienación urbana y la crisis existencial, el Expresionismo Alemán sigue siendo sorprendentemente relevante. Su rechazo a la superficialidad, su compromiso con la verdad emocional, su valentía para explorar lo oscuro y lo incómodo, son lecciones que el arte contemporáneo necesita recordar.</p>
+        <p>El expresionismo nos enseñó que el arte no debe complacer, sino revelar. Que la belleza no reside en la perfección formal, sino en la honestidad emocional. Que el artista no es un decorador, sino un explorador de las profundidades del ser humano.</p>
+      </div>
+      <div class="quote-block">
+        "El arte es la expresión de las más profundas emociones de la manera más simple."
+        <div class="quote-author">— Albert Einstein</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025. Un Viaje Por El Expresionismo - Una exploración interactiva.</p>
+    <p>Elaborado por - Luisa Fernanda Arias Chaux.</p>
+    <p>Introducción al código - Maestría en Comunicación Creativa y Medios Emergentes.</p>
+    <p>Facultad de Comunicación Social y Periodismo - Universidad Externado de Colombia.</p>
+  </footer>
+</body>
+</html>

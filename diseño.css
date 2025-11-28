@@ -1,0 +1,305 @@
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Crimson Text', 'Times New Roman', serif;
+    background: #050000;
+    color: #e0e0e0;
+    overflow-x: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+html {
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+* { box-sizing: border-box; }
+
+/* --- Animated Background & Effects --- */
+.animated-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    background: #000000;
+    overflow: hidden;
+}
+
+/* Efecto de ruido de película antigua */
+.noise-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.bg-shard {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.3), transparent);
+    animation: floatShard 15s infinite ease-in-out;
+}
+
+/* Formas angulares (Expresionistas) en lugar de círculos */
+.shard-1 {
+    width: 400px; height: 400px;
+    top: 10%; left: -50px;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    animation-delay: 0s;
+}
+
+.shard-2 {
+    width: 500px; height: 500px;
+    top: 50%; right: -100px;
+    background: linear-gradient(to left, rgba(80, 0, 0, 0.2), transparent);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation-delay: -5s;
+}
+
+.shard-3 {
+    width: 300px; height: 300px;
+    bottom: 5%; left: 30%;
+    background: radial-gradient(circle, rgba(200, 0, 0, 0.15) 0%, transparent 70%);
+    clip-path: polygon(20% 0%, 100% 20%, 80% 100%, 0% 80%);
+    animation-delay: -10s;
+}
+
+@keyframes floatShard {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(30px, -40px) rotate(5deg); }
+}
+
+/* --- Controls --- */
+.music-control {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    z-index: 1000;
+    background: rgba(10, 0, 0, 0.9);
+    border: 1px solid #cc0000;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    color: #cc0000;
+    transition: 0.3s;
+}
+.music-control:hover { background: #cc0000; color: #000; }
+
+/* --- Header --- */
+header {
+    background: linear-gradient(to bottom, #000000, #1a0000);
+    padding: 100px 20px;
+    text-align: center;
+    border-bottom: 5px solid #660000;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 4.5em;
+    margin: 0 0 20px 0;
+    color: #cc0000;
+    text-shadow: 2px 2px 0px #330000, -1px -1px 10px rgba(255,0,0,0.5);
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: titlePulse 4s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.02); filter: brightness(1.2); }
+}
+
+.subtitle {
+    font-size: 1.2em;
+    color: #aaa;
+    max-width: 800px;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.scroll-indicator {
+    font-size: 2em;
+    color: #cc0000;
+    animation: bounce 2s infinite;
+    margin-top: 50px;
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+}
+
+/* --- Navigation --- */
+nav {
+    background: #000;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-bottom: 2px solid #660000;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-btn {
+    background: #220000;
+    color: #ccc;
+    border: 1px solid #440000;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: #cc0000;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(204, 0, 0, 0.4);
+}
+
+/* --- Content --- */
+main { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+
+.section { display: none; opacity: 0; transition: opacity 0.5s; }
+.section.active { display: block; opacity: 1; animation: fadeIn 0.8s ease-out; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+    font-size: 2.5em;
+    color: #e0e0e0;
+    border-left: 5px solid #cc0000;
+    padding-left: 20px;
+    margin-bottom: 30px;
+    font-family: 'Cinzel', serif;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    padding: 25px;
+    transition: 0.3s;
+    box-shadow: 5px 5px 0px #1a0000; /* Sombra dura expresionista */
+}
+
+.card:hover {
+    transform: translate(-5px, -5px);
+    box-shadow: 10px 10px 0px #cc0000;
+    border-color: #cc0000;
+}
+
+.card h3 { color: #cc0000; font-family: 'Cinzel', serif; margin-top: 0; }
+.card p { color: #bbb; line-height: 1.6; }
+
+.btn {
+    background: transparent;
+    border: 1px solid #555;
+    color: #ccc;
+    padding: 8px 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    transition: 0.3s;
+}
+.btn:hover { background: #cc0000; color: #fff; border-color: #cc0000; }
+
+/* --- Games --- */
+.game-container {
+    background: #111;
+    border: 2px solid #440000;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Puzzle */
+.puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    max-width: 300px;
+    margin: 20px auto;
+}
+.puzzle-piece {
+    aspect-ratio: 1;
+    background: #222;
+    border: 1px solid #660000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    color: #cc0000;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+}
+.puzzle-piece:hover { background: #330000; }
+.puzzle-piece.empty { background: transparent; border: 1px dashed #333; cursor: default; }
+.hidden-msg { margin-top: 20px; padding: 10px; background: #004400; color: #fff; border-radius: 4px; }
+
+/* Quiz */
+.quiz-option {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.quiz-option:hover { background: #333; border-color: #cc0000; }
+.quiz-option.correct { background: #004400; border-color: #0f0; }
+.quiz-option.incorrect { background: #440000; border-color: #f00; }
+
+/* Memory Game */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 500px;
+    margin: 20px auto;
+}
+.memory-card {
+    aspect-ratio: 1;
+    background: #1a1a1a;
+    border: 2px solid #440000;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5em;
+}
+.memory-card.flipped { background: #330000; transform: rotateY(180deg); }
+.memory-card span { display: none; }
+.memory-card.flipped span { display: block; transform: rotateY(180deg); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 { font-size: 2.5em; }
+    .memory-grid { grid-template-columns: repeat(3, 1fr); }
+    .shard-1, .shard-2 { opacity: 0.2; }
+
+
+
+
+
+
